@@ -1,6 +1,7 @@
 ﻿using System.Data.Common;
 using IPLDataModels;
 using IPLDbContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace IPL.Service
 {
@@ -31,9 +32,30 @@ namespace IPL.Service
             {
                 throw new Exception("Unexpected error occured ", ex);
             }
-
-
         }
+
+
+        /// <summary>
+        /// This method will return the coach details if successfully invoked with id.
+        /// </summary>
+        /// <param name="id">Instance of Integer; indicating the id of the coach in the Coaches table.</param>
+        /// <returns>Will return the Coach details for give id.</returns>
+        public async Task<Coach> GetCoachDetailsByIdAsync(int id)
+        {
+            try
+            {
+                var response = await dbContext.Coaches.FirstOrDefaultAsync(q => q.Id == id);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+
+
 
 
     }

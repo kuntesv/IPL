@@ -24,6 +24,11 @@ namespace IPL.Controllers
                 return BadRequest("Inlvaid argument of Coach type passed in the input");
             }
 
+            if (string.IsNullOrEmpty(coachRequest.name))
+            {
+                return StatusCode(400, " Invalid input name provided " +  coachRequest.name);
+            }
+
             try
             {
 
@@ -41,7 +46,27 @@ namespace IPL.Controllers
        }
 
 
+        [HttpPost("GetCoachById")]
+        public async Task<IActionResult> GetCoachById(int coachId)
+        {
 
+            if (coachId < 1)
+            { 
+              return BadRequest("CoachId should be positive interger. Invalid coachId specified : " + coachId);
+            }
+
+            try
+            {
+                var response = await coachService.GetCoachDetailsByIdAsync(coachId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error occured while making get request to the GetCoachById" + ex.Message);
+           
+            }
+
+        }
 
 
     }
