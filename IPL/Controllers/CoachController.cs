@@ -45,9 +45,8 @@ namespace IPL.Controllers
 
        }
 
-
         [HttpPost("GetCoachById")]
-        public async Task<IActionResult> GetCoachById(int coachId)
+        public async Task<IActionResult> GetCoachById([FromQuery] int coachId)
         {
 
             if (coachId < 1)
@@ -68,6 +67,34 @@ namespace IPL.Controllers
 
         }
 
+        [HttpGet("GetAllCoaches")]
+        public IActionResult GetAllCoaches([FromQuery] int pageIndex, [FromQuery] int pageSize)
+        {
+            if(pageIndex < 0)
+            {
+                return BadRequest("Page index must be equal or greater than 0 . Specified value : " + pageIndex);
+            }
 
+            if (pageSize < 0 || pageSize > 5)
+            {
+                return BadRequest("Page Size must be greater than 0 and less than 6 . Specified value : " + pageSize );
+            }
+
+            int skip = pageIndex * pageSize;
+            int limit = pageSize;
+
+            var response = coachService.GetAllCoaches(limit,skip);
+
+            return Ok(response);
+        }
+
+        [HttpDelete("DeleteCoachById")]
+        public async Task<IActionResult> DeleteCoachById([FromQuery] int coachId)
+        {
+
+            await coachService.RemoveCoachAsync(coachId);
+
+            return NoContent();
+        }
     }
 }
